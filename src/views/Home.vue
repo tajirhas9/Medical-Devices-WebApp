@@ -1,18 +1,60 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <form
+      id="app"
+      @submit="login"
+      
+    >
+
+      <p>
+        <label for="email">´Email</label>
+        <input
+          id="email"
+          v-model="email"
+          type="email"
+          name="email"
+        >
+      </p>
+
+      <p>
+        <label for="password">Password</label>
+        <input
+          id="password"
+          v-model="password"
+          type="password"
+          name="password"
+        >
+      </p>
+
+      <p>
+        <input
+          type="submit"
+          value="Submit"
+        >
+      </p>
+
+    </form>
+    
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import HelloWorld from "@/components/HelloWorld.vue"; // @ is an alias to /src
+import UserModule from '@/store/modules/user-store'
 
 @Component({
   components: {
-    HelloWorld,
   },
 })
-export default class Home extends Vue {}
+export default class Home extends Vue {
+  email = "";
+  password = "";
+  userStore: UserModule = this.$store.state.user;
+  userExists: boolean = this.$store.getters.userExists;
+
+  login(): void {
+    console.log("email: " + this.email);
+    console.log("passord: " + this.password);
+  }
+}
 </script>
