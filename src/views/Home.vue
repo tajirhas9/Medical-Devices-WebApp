@@ -1,11 +1,6 @@
 <template>
   <div class="home">
-    <form
-      id="app"
-      @submit="login"
-      
-    >
-
+    <p>User Logged in: {{this.$store.getters.userExists}}</p>
       <p>
         <label for="email">´Email</label>
         <input
@@ -27,34 +22,37 @@
       </p>
 
       <p>
-        <input
-          type="submit"
-          value="Submit"
-        >
+        <button @click="login">Login</button>
       </p>
-
-    </form>
     
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import UserModule from '@/store/modules/user-store'
+import Vue from 'vue'
+import Component from 'vue-class-component'
 
-@Component({
-  components: {
-  },
-})
+@Component
 export default class Home extends Vue {
   email = "";
   password = "";
-  userStore: UserModule = this.$store.state.user;
-  userExists: boolean = this.$store.getters.userExists;
 
-  login(): void {
-    console.log("email: " + this.email);
-    console.log("passord: " + this.password);
+  async login(): Promise<void> {
+    await this.$store.dispatch('loginAction', {email: this.email, password: this.password})
+    if(this.$store.getters.userExists) {
+      this.$router.push('/about')
+    }
+  }
+
+  beforeMount() {
+    //Checking if local user exists...
+    this.$store.dispatch('retrieveLocalUser').then(()=> {
+      // redirect if exists
+      if(this.$store.getters.userExists) {
+        this.$router.push('/about')
+      }
+    })
+    
   }
 }
 </script>
