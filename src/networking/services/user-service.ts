@@ -1,6 +1,7 @@
 import { API_MAINPOINT } from "../index";
 import axios from "axios";
-import { AUser } from "../../store/modules/user-store";
+import { AUser } from "@/store/modules/user-store";
+import { NotAuthorizedError } from "@/errors";
 
 // An interface to map response.data coming from login `post` api
 interface ILoginSuccessResponse {
@@ -29,10 +30,10 @@ export class UserService {
         token: responseData.access_token,
         tokenExpirationTime: responseData.expires_in,
       };
+      console.log("Access token: " + responseData.access_token);
       return userInfo;
     } catch (e) {
-      console.error(e);
-      throw e;
+      throw new NotAuthorizedError();
     }
   }
 }

@@ -117,4 +117,25 @@ export default class DeviceModule extends VuexModule {
       console.error(e);
     }
   }
+
+  @Action({})
+  async addNewDevice(payload: {
+    token: string;
+    BrandId: string;
+    Name: string;
+    Comment: string;
+  }) {
+    try {
+      const newTypeId = await DeviceService.getLastType(payload.token);
+      const response = await DeviceService.addNewDevice(
+        payload.token,
+        payload.BrandId,
+        payload.Name,
+        newTypeId,
+        payload.Comment
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
 }

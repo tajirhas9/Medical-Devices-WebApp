@@ -1,76 +1,35 @@
 <template>
   <div class="show-devices">
 
-  <b-modal 
-    centered
-    hide-footer 
-    size="xl" 
-    class="text-center"
-    id="bv-modal-example" 
-  >
-    <b-container>
-      <b-row align-h="center" class=" text-center">
-        <p style="font-weight: bold; font-size: 20px;">Model Details</p>
-      </b-row>
-      <b-row class="bv-example-row" align-h="center" align-v="center" v-if="detailsLoading">
-        <b-row align-h="center" align-v="center">
-          <b-spinner></b-spinner>
-        </b-row>
-        <b-row align-h="center" align-v="center">
-          <strong>Loading...</strong>
-        </b-row>
-      </b-row>
+<!--
 
-      <b-row v-if="detailsEmpty">
-        <p>Nothing to show</p>
-      </b-row>
+  Dialog that shows the details of the selected type
 
-      <b-row v-if="detailsNotEmpty">
-
-          <b-table
-          hover
-          striped
-          small
-          scrollable
-          id="my-details-table"
-          :items="details"
-          :per-page="detailsPerPage"
-          :current-page="detailsCurrentPage"
-        >
-        </b-table>
-        <b-pagination
-          v-model="detailsCurrentPage"
-          :total-rows="totalDetails"
-          :per-page="detailsPerPage"
-          aria-controls="my-details-table"
-          first-text="First"
-          prev-text="Prev"
-          next-text="Next"
-          last-text="Last"
-        ></b-pagination>
-        <p class="mt-3">Current Page: {{ detailsCurrentPage }}</p>
-
-      </b-row>
-
-      <b-row>
-        <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close</b-button>
-      </b-row>
-    </b-container>
-    
-  </b-modal>
-
+-->
+  <DetailsModal :show="shownDetails" :item="typeSelected" v-on:close="shownDetails=false"/>
+  <AddNewModal :show="shownAddNew" v-on:close="shownAddNew=false"/>
     <b-container>
       <b-row class="overflow-auto">
-       
+       <!--
+        
+        Heading
+
+       -->
         <b-row>
           <b-col cols="10" class="text-start">
           <h3>Model Types</h3>
           <h6 style="color: #a3a3a3">Tap to see details</h6>
           </b-col>
           <b-col cols="2" class="text-end">
-            <b-button variant="primary">Add New</b-button>
+            <b-button variant="primary" @click="shownAddNew=true">Add New</b-button>
           </b-col>
         </b-row>
+        <!--
+
+          - Loading view
+          - Shows when data is not loaded 
+
+        -->
         <b-row class="bv-example-row" align-h="center" align-v="center" v-if="loading">
           <b-row align-h="center" align-v="center">
             <b-spinner></b-spinner>
@@ -79,6 +38,13 @@
             <strong>Loading...</strong>
           </b-row>
         </b-row>
+
+        <!--
+
+          Table of types
+
+        -->
+
         <b-table
           hover
           striped
@@ -92,6 +58,12 @@
           @row-selected="onRowSelected"
         >
         </b-table>
+
+        <!--
+
+          Pagination
+
+        -->
         <b-pagination
           v-model="currentPage"
           :total-rows="totalDevices"
@@ -113,23 +85,34 @@ import { AModelData, AModelType } from '@/store/modules/device-store';
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import Header from '@/components/Header.vue'
-import DetailsModal from '@/components/DetailsModal.vue'
+import DetailsModal from '@/components/details-modal.vue'
+import AddNewModal from '@/components/add-new-modal.vue';
+import {NotAuthorizedError} from '@/errors'
 
 @Component({
   components: {
-    Header
+    DetailsModal,
+    AddNewModal
   }
 })
 export default class ShowDevices extends Vue {
+  
+  // Data state
+  // Holds the array that is viewed in the table
   data: Array<AModelType> = [];
-  details: Array<AModelData> = [];
+  
+  // Pagination data
   currentPage = 1;
   perPage = 14;
-  detailsCurrentPage = 1;
-  detailsPerPage = 10;
-  isLoading = true;
-  detailsLoadingStatus = true;
 
+  isLoading = true;
+  showDetails = false;    // tracks the dialog view off/on
+  showAddNew = false;     // tracks the dialog view for add new 
+
+  selectedType:Array<AModelType> = [];  // stores the clicked row from the table
+
+
+  // Computed values
   get loading(){
     return this.isLoading;
   }
@@ -137,51 +120,43 @@ export default class ShowDevices extends Vue {
     this.isLoading = status
   }
 
-  get detailsLoading() {
-    return this.detailsLoadingStatus;
-  }
-
-  set detailsLoading(status) {
-    this.detailsLoadingStatus = status
-  }
-
   get totalDevices() {
     return this.data.length;
   }
 
-  get totalDetails() {
-    return this.data.length;
+  get shownDetails() {
+    return this.showDetails;
   }
 
-  get detailsNotEmpty() {
-    return this.details.length !== 0
+  set shownDetails(status) {
+    this.showDetails = status;
   }
 
-  get detailsEmpty() {
-    return !this.detailsLoading && this.details.length === 0
+  get shownAddNew() {
+    return this.showAddNew;
   }
 
+  set shownAddNew(status) {
+    this.showAddNew = status;
+  }
+
+  get typeSelected() {
+    return this.selectedType;
+  }
+
+  set typeSelected(newSelection) {
+    this.selectedType = newSelection;
+  }
+
+
+  // Invokes whenever a row is clicked
   onRowSelected(item: Array<AModelType>) {
-    this.details = [];
-    this.detailsCurrentPage = 1;
-    this.detailsLoading = true;
-
-    const token = this.$store.getters.userToken;
-    const brandName = item[0].BrandId;
-    const modelName = item[0].Name;
-
-    this.$store
-          .dispatch("getModelData", {token, brandName, modelName} )
-          .then(() => {
-            this.details = this.$store.getters.modelDataList;
-            console.log(JSON.stringify(this.details))
-            this.detailsLoading = false;
-          })
-    this.$bvModal.show('bv-modal-example')
+    this.shownDetails = true;
+    this.typeSelected = item;
   }
 
+  // Lifecycle hook
   beforeMount() {
-    
     if(this.$store.getters.userExists) {
       this.loading = true;
       this.$store
@@ -189,6 +164,11 @@ export default class ShowDevices extends Vue {
                 .then(() => { 
                   this.data = this.$store.getters.modelTypes; 
                   this.loading = false;
+                })
+                .catch((e)=> {
+                  if(e instanceof NotAuthorizedError) {
+                    console.log("User not logged in / session expired")
+                  }
                 })
     } else {
       this.$router.push('/')
