@@ -1,22 +1,13 @@
-import { API_MAINPOINT } from "@/API";
+import { API_MAINPOINT } from "@/networking";
 import axios from "axios";
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
+import { UserService } from "../../../networking/index";
 
-export interface IUser {
-  id: number;
-  email: string;
-  token: string;
-  tokenExpirationTime: string;
-}
-
-// An interface to map response.data coming from login `post` api
-interface ILoginSuccessResponse {
-  user: {
-    id: number;
-    email: string;
-  };
-  access_token: string;
-  expires_in: string;
+export abstract class AUser {
+  abstract id: number;
+  abstract email: string;
+  abstract token: string;
+  abstract tokenExpirationTime: string;
 }
 
 /**
@@ -31,7 +22,7 @@ interface ILoginSuccessResponse {
 @Module
 export default class UserModule extends VuexModule {
   // State
-  user?: IUser = undefined;
+  user?: AUser = undefined;
 
   /**
    *
@@ -44,7 +35,16 @@ export default class UserModule extends VuexModule {
 
   // Getter
   get userExists(): boolean {
+    console.log("userExists()====user: " + JSON.stringify(this.user));
     return this.user !== undefined;
+  }
+
+  get userToken(): string {
+    console.log("userToken()====user: " + this.user?.token);
+    if (this.user !== undefined) {
+      return this.user.token;
+    }
+    return "";
   }
 
   /**
@@ -57,9 +57,10 @@ export default class UserModule extends VuexModule {
    */
 
   @Mutation
-  updateUserInfo(userInfo: IUser | undefined) {
+  updateUserInfo(userInfo: AUser | undefined) {
     this.user = userInfo;
-    if (userInfo !== undefined) localStorage.user = userInfo;
+    if (userInfo === undefined) localStorage.removeItem("user");
+    else localStorage.user = JSON.stringify(userInfo);
   }
 
   /**
@@ -80,22 +81,13 @@ export default class UserModule extends VuexModule {
   @Action({ commit: "updateUserInfo" })
   async loginAction(payload: { email: string; password: string }) {
     try {
-      const response = await axios.post(
-        API_MAINPOINT + "login",
-        JSON.stringify(payload),
-        { headers: { "Content-Type": "application/json" } }
-      );
-      const responseData: ILoginSuccessResponse = response.data;
-      // maps the response data to IUser interface
-      const userInfo: IUser = {
-        id: responseData.user.id,
-        email: responseData.user.email,
-        token: responseData.access_token,
-        tokenExpirationTime: responseData.expires_in,
-      };
-      return userInfo;
+      // login
+      // if success, commit the new user to updateUserInfo
+      const user: AUser = await UserService.login(payload);
+      console.log("access token: " + user.token);
+      return user;
     } catch (e) {
-      console.error(e);
+      console.log("Failed to login" + e);
     }
   }
 
@@ -109,7 +101,16 @@ export default class UserModule extends VuexModule {
    */
   @Action({ commit: "updateUserInfo" })
   retrieveLocalUser() {
-    if (localStorage.user) return localStorage.user;
+    if (localStorage.user) {
+      console.log("User info in localstorage: " + localStorage.user);
+      try {
+        const localUser: AUser = JSON.parse(localStorage.user);
+        console.log("local userId: " + localUser.id);
+        return localUser;
+      } catch (e) {
+        console.error(e);
+      }
+    }
     return undefined;
   }
 }

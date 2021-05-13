@@ -40,7 +40,7 @@ export default class Home extends Vue {
   async login(): Promise<void> {
     await this.$store.dispatch('loginAction', {email: this.email, password: this.password})
     if(this.$store.getters.userExists) {
-      this.$router.push('/about')
+      this.$router.push('/show-devices')
     }
   }
 
@@ -49,7 +49,7 @@ export default class Home extends Vue {
     this.$store.dispatch('retrieveLocalUser').then(()=> {
       // redirect if exists
       if(this.$store.getters.userExists) {
-        this.$router.push('/about')
+        this.$router.push('/show-devices')
       }
     })
     
