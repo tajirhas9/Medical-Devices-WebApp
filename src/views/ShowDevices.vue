@@ -61,6 +61,7 @@
 
     <b-container>
       <b-row class="overflow-auto">
+       
         <b-row>
           <b-col cols="10" class="text-start">
           <h3>Model Types</h3>
@@ -111,8 +112,14 @@
 import { AModelData, AModelType } from '@/store/modules/device-store';
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import Header from '@/components/Header.vue'
+import DetailsModal from '@/components/DetailsModal.vue'
 
-@Component
+@Component({
+  components: {
+    Header
+  }
+})
 export default class ShowDevices extends Vue {
   data: Array<AModelType> = [];
   details: Array<AModelData> = [];
