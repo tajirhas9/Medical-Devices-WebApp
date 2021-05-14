@@ -106,7 +106,7 @@ Now, let us break down each of these folders and understand what is going on ins
     - **Reason for this folder:** The error responses in the backend do not maintain a general format. so, when we throw an error from the networking script to the action method of the vuex store, the vuex action method should not have any concern about the type of the error it receives. That is why, I have built a base error type that is common for any kind of error the vuex store may receive. It keeps the type defination same for any kind of error the store may get and reduces dependencies between scripts.
 - **networking**
   - All the API calls are implemented here.
-  - Two sub-folders are created depending on the type of api calls
+  - Two classes are created depending on the type of api calls
     - **UserService** class maintains the api calls for user authentication and user info
     - **DeviceService** class maintains the api calls related to the REST operation on the devices.
 - **router**
