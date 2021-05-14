@@ -91,6 +91,11 @@ export default class UserModule extends VuexModule {
     }
   }
 
+  @Action({ commit: "updateUserInfo" })
+  async logoutAction() {
+    return undefined;
+  }
+
   /**
    *
    * @returns a commit to updateUserInfo mutation
