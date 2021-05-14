@@ -11,6 +11,11 @@
       <b-row align-h="center" class="text-center">
         <p style="font-weight: bold; font-size: 20px">Model Details</p>
       </b-row>
+
+      <!--
+        - Loading 
+        - shows only when data is being fetched
+      -->
       <b-row
         class="bv-example-row"
         align-h="center"
@@ -70,11 +75,15 @@ export default class DetailsModal extends Vue {
   @Prop() private show!: boolean;
   @Prop() private item!: Array<AModelType>;
 
+  // Data
+
   currentPage = 1;
   detailsPerPage = 10;
   detailsCurrentPage = 1;
   detailsLoadingStatus = true;
   details: Array<AModelData> = [];
+
+  // Computed Values
 
   get detailsLoading() {
     return this.detailsLoadingStatus;
@@ -96,14 +105,27 @@ export default class DetailsModal extends Vue {
     return !this.detailsLoading && this.details.length === 0;
   }
 
+  // Methods
+
   closeModal() {
     this.$emit("close");
   }
 
+  // Watches
+
   @Watch("show")
   OnShowChange(val: boolean, oldVal: boolean) {
-    console.log("value of show: " + this.show);
+    /**
+     * This method keeps track of the show variable
+     * and decides whether to show or hide the modal
+     */
     if (val) {
+      /**
+       * Show the model
+       * - Fetch data
+       * - Stop loading
+       * - Show data
+       */
       try {
         const token = this.$store.getters.userToken;
         const brandName = this.item[0].BrandId;
@@ -122,6 +144,10 @@ export default class DetailsModal extends Vue {
         this.$emit("close");
       }
     } else {
+      /**
+       * Hide the modal
+       * Reset data
+       */
       this.$bvModal.hide("bv-modal-details");
       this.details = [];
       this.detailsCurrentPage = 1;

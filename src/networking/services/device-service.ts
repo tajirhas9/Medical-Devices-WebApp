@@ -49,6 +49,7 @@ export class DeviceService {
     }
   }
 
+  // GET/: /devicetype
   static async getLastType(token: string): Promise<number> {
     try {
       const url = API_MAINPOINT + "devicetype?limit=40&page=1";
@@ -68,6 +69,7 @@ export class DeviceService {
     }
   }
 
+  // POST/ : /devicemodel
   static async addNewDevice(
     token: string,
     BrandId: string,

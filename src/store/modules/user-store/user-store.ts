@@ -77,14 +77,13 @@ export default class UserModule extends VuexModule {
    * @param payload 1. email, 2. password
    * @returns a commit to updateUserInfo mutation on post success
    */
-  // TODO: token expiration not handled
+
   @Action({ commit: "updateUserInfo" })
   async loginAction(payload: { email: string; password: string }) {
     try {
       // login
       // if success, commit the new user to updateUserInfo
       const user: AUser = await UserService.login(payload);
-      console.log("access token: " + user.token);
       return user;
     } catch (e) {
       console.log("Failed to login" + e);
@@ -107,10 +106,8 @@ export default class UserModule extends VuexModule {
   @Action({ commit: "updateUserInfo" })
   retrieveLocalUser() {
     if (localStorage.user) {
-      console.log("User info in localstorage: " + localStorage.user);
       try {
         const localUser: AUser = JSON.parse(localStorage.user);
-        console.log("local userId: " + localUser.id);
         return localUser;
       } catch (e) {
         console.error(e);

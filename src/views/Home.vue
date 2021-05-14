@@ -21,11 +21,17 @@
             <b-alert show variant="danger">Wrong email or password</b-alert>
           </b-row>
 
+          <!--
+            Form
+          -->
           <b-row
             class="text-center"
             style="padding-bottom: 30px; padding-top: 30px"
           >
             <b-col></b-col>
+            <!--
+              email
+              -->
             <b-col cols="8"
               ><b-row>
                 <b-col> <label for="email">Email</label></b-col>
@@ -44,6 +50,9 @@
           </b-row>
           <b-row class="text-center" style="padding-bottom: 30px">
             <b-col></b-col>
+            <!--
+              password
+            -->
             <b-col cols="8"
               ><b-row>
                 <b-col>
@@ -90,7 +99,7 @@ import NavBar from "@/components/nav-bar.vue";
 export default class Home extends Vue {
   email = "";
   password = "";
-  error = false;
+  error = false; // true if login fails
 
   get showError() {
     return this.error;
@@ -101,14 +110,23 @@ export default class Home extends Vue {
   }
 
   async login(): Promise<void> {
+    /**
+     * Dispatches action to login.
+     */
     this.showError = false;
     await this.$store.dispatch("loginAction", {
       email: this.email,
       password: this.password,
     });
     if (this.$store.getters.userExists) {
+      /**
+       * Redirect on login success
+       */
       this.$router.push("/show-devices");
     } else {
+      /**
+       * Show error msg on login fail
+       */
       this.showError = true;
     }
   }

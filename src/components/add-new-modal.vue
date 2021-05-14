@@ -25,6 +25,9 @@
         </b-row>
       </b-row>
 
+      <!--
+        Form
+      -->
       <b-row>
         <b-row style="padding: 30px">
           <label for="brand-id">Brand Id:</label>
@@ -61,6 +64,9 @@
         >
       </b-row>
 
+      <!--
+        Buttons
+      -->
       <b-row>
         <b-button variant="primary" class="mt-3" block @click="addNew"
           >Add</b-button
@@ -83,12 +89,15 @@ import { Component, Emit, Prop, Vue, Watch } from "vue-property-decorator";
 @Component
 export default class AddNewModal extends Vue {
   @Prop() private show!: boolean;
+
+  // Data
   loadingStatus = false;
   brandId = "";
   name = "";
   comment = "";
   error = false;
 
+  // Computed values
   get loading() {
     return this.loadingStatus;
   }
@@ -105,29 +114,31 @@ export default class AddNewModal extends Vue {
     this.error = status;
   }
 
+  // Methods
+
   closeModal() {
     this.$emit("close");
   }
 
   addNew() {
-    console.log("Brand id: " + this.brandId);
-    console.log("Name: " + this.name);
-    console.log("Comment: " + this.comment);
-
+    /**
+     * dispatch action to vuex store to add new device
+     * on success ->
+     *    - emit success
+     *    - reset data
+     *    - close modal
+     */
     this.loading = true;
 
     const token = this.$store.getters.userToken;
     const BrandId = this.brandId;
     const Name = this.name;
     const Comment = this.comment;
-
-    // TODO: Refresh modeltype after success
     this.$store
       .dispatch("addNewDevice", { token, BrandId, Name, Comment })
       .then(() => {
         this.loading = false;
         this.$emit("success");
-
         this.brandId = "";
         this.name = "";
         this.comment = "";
@@ -140,8 +151,13 @@ export default class AddNewModal extends Vue {
       });
   }
 
+  // Watchers
   @Watch("show")
   OnShowChange(val: boolean, oldVal: boolean) {
+    /**
+     * This method keeps track of the show variable
+     * and decides whether to show or hide the modal
+     */
     console.log("value of show: " + this.show);
     if (val) {
       this.$bvModal.show("bv-modal-add-new");
