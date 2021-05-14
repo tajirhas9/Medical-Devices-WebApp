@@ -24,7 +24,7 @@
             <li><a href="#folder-structure">Folder Structure</a></li>
         </ul>
     </li>
-    <li><a href="#roadmap">Area of improvement</a></li>
+    <li><a href="#area-for-improvement">Area for improvement</a></li>
   </ol>
 </details>
 
@@ -89,3 +89,37 @@ This is the overall architecture that is used in the application.
 ### Folder Structure
 
 <img src="public/images/root-folder-structure.png" alt="Root Folder Structure" class="center">
+For maintaining clean code and keeping future changes in mind that may occur in an application, I have broken down the codes in 6 separate folders. 
+1. components
+2. errors
+3. networking
+4. router
+5. store
+6. views
+
+Now, let us break down each of these folders and understand what is going on inside those folders.
+
+- **components**
+  - This folder holds the custom build components that can be used as a common component in any view _i.e._ `nav-bar.vue` or simply isolating components from their corresponding views so that we can keep L.O.C as less as possible in a single file.
+- **errors**
+  - This folder generalizes error responses that come from the API.
+    - **Reason for this folder:** The error responses in the backend do not maintain a general format. so, when we throw an error from the networking script to the action method of the vuex store, the vuex action method should not have any concern about the type of the error it receives. That is why, I have built a base error type that is common for any kind of error the vuex store may receive. It keeps the type defination same for any kind of error the store may get and reduces dependencies between scripts.
+- **networking**
+  - All the API calls are implemented here.
+  - Two sub-folders are created depending on the type of api calls
+    - **UserService** class maintains the api calls for user authentication and user info
+    - **DeviceService** class maintains the api calls related to the REST operation on the devices.
+- **router**
+  - maintains navigation between views. built in vue-router.
+- **store**
+  - This folder holds all the scripts related to Vuex. The store is divided into two seperate modules. One for user and another for devices. The corresponding modules hold all the methods, getters,mutations, actions related to them.
+- **views**
+  - Holds the existing two view components of the app.
+
+### Area for improvement
+
+- The mutations are not properly typed in the vuex store. It may be solved by making the strings as enums for the mutations.
+- Currently, the application validates token by existance of token or by receiving any Unauthorized error response from the api. It can be changed by checking token expiration before sending api calls. For that, the token_expiration response string received '24h' may be needed to be processed.
+- Improvement in the UX/UI of the application
+- The application can have a validation on the add new device input fields. For example, should not post request on empty input field. Currently, I don't know the validation requirement of that api so did not implement that. But it can be done in no time.
+- More error types may be introduced.

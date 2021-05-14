@@ -1,4 +1,4 @@
-import { API_MAINPOINT } from "../index";
+import { API_MAINPOINT } from "./index";
 import axios from "axios";
 import { AModelType, AModelData } from "@/store/modules/device-store";
 import { BadRequestError, NotAuthorizedError } from "@/errors";

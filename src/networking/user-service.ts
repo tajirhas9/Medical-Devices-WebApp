@@ -1,4 +1,4 @@
-import { API_MAINPOINT } from "../index";
+import { API_MAINPOINT } from "./index";
 import axios from "axios";
 import { AUser } from "@/store/modules/user-store";
 import { NotAuthorizedError } from "@/errors";
