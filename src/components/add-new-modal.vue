@@ -110,6 +110,8 @@ export default class AddNewModal extends Vue {
         const Name = this.name;
         const Comment = this.comment;
 
+
+        // TODO: Refresh modeltype after success
         this.$store
             .dispatch("addNewDevice", {token, BrandId,Name, Comment} )
             .then(() => {
