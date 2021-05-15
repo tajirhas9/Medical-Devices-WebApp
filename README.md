@@ -21,7 +21,7 @@
     	<a href="#development-overview">Development Overview</a>
         <ul>
         	<li><a href="#software-architecture">Software Architecture</a></li>
-          <li><a href="#component-type"></a></li>
+          <li><a href="#component-type">Component Type</a></li>
           <li><a href="#folder-structure">Folder Structure</a></li>
         </ul>
     </li>
