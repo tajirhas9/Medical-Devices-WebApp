@@ -95,7 +95,8 @@ For developing class components, [`vue-class-component`](https://class-component
 ### Folder Structure
 
 <img src="public/images/root-folder-structure.png" alt="Root Folder Structure" class="center">
-For maintaining clean code and keeping future changes in mind that may occur in an application, I have broken down the codes in 6 separate folders. 
+For maintaining clean code and keeping future changes in mind that may occur in an application, I have broken down the codes in 6 separate folders.
+
 1. [components](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/components)
 2. [errors](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/errors)
 3. [networking](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/networking)
