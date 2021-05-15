@@ -21,7 +21,8 @@
     	<a href="#development-overview">Development Overview</a>
         <ul>
         	<li><a href="#software-architecture">Software Architecture</a></li>
-            <li><a href="#folder-structure">Folder Structure</a></li>
+          <li><a href="#component-type"></a></li>
+          <li><a href="#folder-structure">Folder Structure</a></li>
         </ul>
     </li>
     <li><a href="#area-for-improvement">Area for improvement</a></li>
@@ -86,16 +87,21 @@ So, we can see that, the view can only read data from the store. It cannot direc
 
 This is the overall architecture that is used in the application.
 
+### Component Type
+
+The component type choosen for this project is [Vue Class Component](https://class-component.vuejs.org/). Instead of vue supporting of Functional component, the reason behind why class components are used is because, currently Vuex supports stricter type support in class component than functional component and again, with TypeScript, developing class components are quite faster. The project hardly contains any performance-heavy issue, so it is beleived not to face any noticable slower performance.
+For developing class components, [`vue-class-component`](https://class-component.vuejs.org/) and [`vue-property-decorator`](https://github.com/kaorun343/vue-property-decorator) packages are significantly used. For developing Vuex store that can be used with the components, [`vuex-module-decorators`](https://championswimmer.in/vuex-module-decorators/) package is used.
+
 ### Folder Structure
 
 <img src="public/images/root-folder-structure.png" alt="Root Folder Structure" class="center">
 For maintaining clean code and keeping future changes in mind that may occur in an application, I have broken down the codes in 6 separate folders. 
-1. components
-2. errors
-3. networking
-4. router
-5. store
-6. views
+1. [components](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/components)
+2. [errors](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/errors)
+3. [networking](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/networking)
+4. [router](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/router)
+5. [store](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/store)
+6. [views](https://github.com/tajirhas9/Medical-Devices-WebApp/tree/main/src/views)
 
 Now, let us break down each of these folders and understand what is going on inside those folders.
 
