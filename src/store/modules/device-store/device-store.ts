@@ -1,7 +1,5 @@
-import { API_MAINPOINT, DeviceService } from "@/networking";
-import axios from "axios";
+import { DeviceService } from "@/networking";
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { UserService } from "../../../networking/index";
 
 export abstract class AModelData {
   abstract Id: number;

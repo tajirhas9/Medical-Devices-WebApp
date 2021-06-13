@@ -1,7 +1,5 @@
-import { API_MAINPOINT } from "@/networking";
-import axios from "axios";
 import { Action, Module, Mutation, VuexModule } from "vuex-module-decorators";
-import { UserService } from "../../../networking/index";
+import { UserService } from "@/networking/index";
 
 export abstract class AUser {
   abstract id: number;
