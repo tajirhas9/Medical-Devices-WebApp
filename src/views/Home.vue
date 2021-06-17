@@ -34,9 +34,12 @@
               -->
             <b-col cols="8"
               ><b-row>
-                <b-col> <label for="email">Email</label></b-col>
+                <b-col>
+                  <label for="email" test-id="email-label">Email</label></b-col
+                >
                 <b-col>
                   <b-form-input
+                    test-id="email-input"
                     id="email"
                     v-model="email"
                     type="email"
@@ -56,10 +59,13 @@
             <b-col cols="8"
               ><b-row>
                 <b-col>
-                  <label for="password">Password</label>
+                  <label for="password" test-id="password-label"
+                    >Password</label
+                  >
                 </b-col>
                 <b-col>
                   <b-form-input
+                    test-id="password-input"
                     id="password"
                     v-model="password"
                     type="password"
@@ -74,7 +80,12 @@
           <b-row class="text-center">
             <b-col cols="5"></b-col>
             <b-col cols="3">
-              <b-button variant="primary" class="mt-3" block @click="login"
+              <b-button
+                variant="primary"
+                class="mt-3"
+                block
+                @click="login"
+                test-id="login-button"
                 >Login</b-button
               ></b-col
             >
